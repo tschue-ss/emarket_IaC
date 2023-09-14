@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage('terraform plan'){
+        stage('terraform plan -destroy'){
             steps{
                 container('terraform'){
                     withCredentials([[
@@ -41,7 +41,7 @@ pipeline {
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
-                              sh 'terraform plan -out tfplan'
+                              sh 'terraform plan -destroy -out tfplan'
                               sh 'terraform show -no-color tfplan > tfplan.txt'
                     }
                 }
@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-        stage('terraform apply'){
+        stage('terraform destroy'){
            when {
                 branch 'main'
             }
@@ -72,7 +72,7 @@ pipeline {
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
                               sh 'echo test'
-                              sh 'terraform apply -auto-approve'
+                              sh 'terraform destroy -auto-approve'
                     }
                 }
             }
